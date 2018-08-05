@@ -1,0 +1,21 @@
+
+# Not using SpringBoot to initialise Kafka client
+kafka:
+  bootstrap-servers: localhost:19092, localhost:29092, localhost:39092
+  schema-registry-url: http://localhost:18081
+
+  producer:
+    trade:
+      topic: stockstats.trades
+      acks: all
+      batch-size: 16384 # bytes
+      linger-ms: 100
+      retries: 100
+      retry-backoff-ms: 100
+
+logging:
+  pattern:
+      console: "%gray(%date{HH:mm:ss.SSS}) %highlight(%-5level) [%cyan(%-15thread)] %gray(%-35logger{10}) : %msg%n"
+  level:
+    com.nutmeg: DEBUG
+    org.apache.kafka.streams: DEBUG

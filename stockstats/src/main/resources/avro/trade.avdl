@@ -1,0 +1,10 @@
+@namespace("com.nutmeg.kstreams.stockstats.avro")
+protocol TradeProtocol {
+
+  record Trade {
+    string type;
+    string ticker;
+    double price; // TODO Change to decimal
+    int size;
+  }
+}

@@ -1,4 +1,4 @@
-package com.nutmeg.kstream.wordcount;
+package com.nutmeg.kstreams.wordcount;
 
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.apache.kafka.streams.KafkaStreams;

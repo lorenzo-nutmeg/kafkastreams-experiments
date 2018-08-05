@@ -1,4 +1,4 @@
-package com.nutmeg.kstream.wordcount;
+package com.nutmeg.kstreams.wordcount;
 
 import org.apache.kafka.clients.admin.AdminClient;
 import org.apache.kafka.clients.admin.CreateTopicsResult;

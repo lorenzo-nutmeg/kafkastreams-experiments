@@ -1,4 +1,4 @@
-package com.nutmeg.kstream.wordcount;
+package com.nutmeg.kstreams.wordcount;
 
 import java.io.IOException;
 import java.net.URISyntaxException;

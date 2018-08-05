@@ -9,7 +9,7 @@ To start the cluster (from `./docker` dir):
 $ docker-compose up -d && ./wait_brokers_up.sh
 ```
 
-To run the experiment (from the experiment module directory):
+To run the experiment (from each experiment module directory):
 ```
 $ mvn spring-boot:run
 ```

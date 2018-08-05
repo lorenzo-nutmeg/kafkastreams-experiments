@@ -13,6 +13,21 @@ kafka:
       retries: 100
       retry-backoff-ms: 100
 
+  consumer:
+    trade-stats:
+      topic: stockstats.stats
+      group-id: stats-logger
+      max-poll-interval-ms: 30000
+      enable-auto-commit: true
+      auto-commit-interval-ms: 5000
+      auto-offset-reset: earliest
+
+
+  streams:
+    application: stock-stats
+    source-topic: stockstats.trades
+    dest-topic: stockstats.stats
+
 logging:
   pattern:
       console: "%gray(%date{HH:mm:ss.SSS}) %highlight(%-5level) [%cyan(%-15thread)] %gray(%-35logger{10}) : %msg%n"

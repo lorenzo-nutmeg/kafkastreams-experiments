@@ -27,26 +27,34 @@ public class TradeProducer {
     private final AtomicInteger countTickers = new AtomicInteger(0);
     private final RateLimiter rateLimiter;
 
+    private final Thread producerThread;
 
     public TradeProducer(KafkaTemplate<String, Trade> kafkaTemplate, int maxTradesPerSecond) {
         this.kafkaTemplate = kafkaTemplate;
         this.rateLimiter = RateLimiter.create(maxTradesPerSecond);
+        this.producerThread = new Thread(tradeGenerator);
     }
 
     /**
      * Starts generating Trades on a separate thread
      */
     public void start() {
-        new Thread(tradeGenerator).start();
+        producerThread.start();
     }
 
+    /**
+     * Stop the thread generating trades
+     */
+    public void stop() {
+        producerThread.stop(); // This is not completely safe, but we don't care
+    }
 
     private void sendTrade(Trade trade) {
         // For simplicity, limit send rate
         rateLimiter.acquire();
 
         final String ticker = trade.getTicker();
-        final ListenableFuture<SendResult<String, Trade>> future = kafkaTemplate.send(ticker, trade);
+        final ListenableFuture<SendResult<String, Trade>> future = kafkaTemplate.sendDefault(ticker, trade);
         future.addCallback(new ListenableFutureCallback<SendResult<String, Trade>>() {
 
             @Override

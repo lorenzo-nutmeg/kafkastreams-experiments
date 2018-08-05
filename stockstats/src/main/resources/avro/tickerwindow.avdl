@@ -1,0 +1,7 @@
+@namespace("com.nutmeg.kstreams.stockstats.avro")
+protocol TickerWindwowProtocolo {
+  record TickerWindow {
+    string ticker;
+    timestamp_ms timestamp;
+  }
+}

@@ -28,3 +28,11 @@ kafka-console-consumer --bootstrap-server localhost:29092 \
     --topic <topic-name> --from-beginning \
     --property print.key=true --property key.separator=":"
 ```
+
+Consume from a topic using Avro, showing both key and value:
+```
+kafka-avro-console-consumer --bootstrap-server localhost:19092 \
+    --topic stockstats.stats --from-beginning \
+    --property print.key=true --property schema.registry.url=http://localhost:18081 \
+    --property key.separator=":" 
+```

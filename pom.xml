@@ -22,6 +22,7 @@
         <junit.version>4.12</junit.version>
         <confluent.version>4.1.0</confluent.version>
         <avro.version>1.8.2</avro.version>
+        <joda-time.version>2.10</joda-time.version>
         <kafka-clients.version>1.0.1</kafka-clients.version>
         <guava.version>23.2-jre</guava.version>
     </properties>
@@ -88,10 +89,23 @@
                 <version>${confluent.version}</version>
             </dependency>
             <dependency>
+                <groupId>io.confluent</groupId>
+                <artifactId>kafka-streams-avro-serde</artifactId>
+                <version>${confluent.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.apache.avro</groupId>
                 <artifactId>avro</artifactId>
                 <version>${avro.version}</version>
             </dependency>
+
+            <!-- AVRO uses JodaTime form time-related fields -->
+            <dependency>
+                <groupId>joda-time</groupId>
+                <artifactId>joda-time</artifactId>
+                <version>${joda-time.version}</version>
+            </dependency>
+
             <!-- test -->
             <dependency>
                 <groupId>junit</groupId>

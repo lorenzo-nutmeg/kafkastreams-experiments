@@ -38,6 +38,7 @@ public class RateLimitedProducer {
 
     public void sendMessage(String message) {
 
+        rateLimiter.acquire();
         ListenableFuture<SendResult<String, String>> future = template.send(topicName, message);
         future.addCallback(new ListenableFutureCallback<SendResult<String, String>>() {
 

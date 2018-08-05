@@ -2,6 +2,13 @@
 
 Each module is a separate experiment
 
+Working experiments, so far:
+- [Word Count](./wordcount): the mandatory "hello, world" example for stream processing
+- [Stock Stats](./stockstats): stateful, windowed aggregation; AVRO with objects generated from IDL
+
+All experiments uses a [local Kafka cluster](./docker), 3 Kafka brokers, ZooKeeper and Schema Registry, 
+running with Docker Compose. The `docker-compose.yml` file works with Docker for Mac.
+
 ## Running experiments
 
 To start the cluster (from `./docker` dir):

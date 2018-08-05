@@ -1,0 +1,32 @@
+spring:
+  kafka:
+    # See: https://docs.spring.io/spring-boot/docs/current/reference/html/common-application-properties.html
+    # See also: https://kafka.apache.org/documentation/#producerconfigs
+    #       and https://kafka.apache.org/documentation/#consumerconfigs
+    # (Note that dots in Apache Kafka property names become dashes in this file)
+    bootstrap-servers:
+      - localhost:19092
+      - localhost:29092
+      - localhost:39092
+
+
+    producer:
+      acks: all # acks=all This means the leader will wait for the full set of in-sync replicas to acknowledge the record.
+                # This guarantees that the record will not be lost as long as at least one in-sync replica remains alive.
+                # This is the strongest available guarantee.
+      retries: 100 # Producers retry on recoverable errors, like "Leader not available"
+      batch-size: 4096 # Batch size in BYTES
+      properties:
+        # Additional RateLimitedProducer configuration properties, not directly supported by SpringBoot, go here..
+        # Use normal Kafka property names with dots (not dashes)
+        linger.ms: 100 # (default) Milliseconds the producer waits before sending a batch, if batch to be sent is smaller than batch-size
+
+  streams:
+    application: word-count # This is NOT a SpringBoot/Spring Kafka standard property
+
+logging:
+  pattern:
+      console: "%gray(%date{HH:mm:ss.SSS}) %highlight(%-5level) [%cyan(%-15thread)] %gray(%-35logger{10}) : %msg%n"
+  level:
+    com.nutmeg: DEBUG
+    org.apache.kafka.streams: DEBUG

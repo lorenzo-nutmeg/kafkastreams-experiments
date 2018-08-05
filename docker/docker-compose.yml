@@ -1,0 +1,104 @@
+---
+# Docker-Compose file to run a Kafka cluster with 3 Kafka brokers and Schema Registry 
+# on Docker for Mac, working around Docker for Mac networking limitations 
+# (the Confluent Docker-Compose file doesn't work)
+# Based on https://gist.github.com/mhowlett/14f70af1a5b44fba80c9d1857a44bb98
+#
+# Usage:
+# - export HOST_IP env variable to the external IP of the machine (NOT to localhost)
+# - optionally set CONFLUENT_PLATFORM_VERSION (default version is 4.1.0)
+# - docker-compose up -d
+#
+# Kafka brokers are accessible from the host machine on:
+#   kafka-1: localhost:19092
+#   kafka-2: localhost:29092
+#   kafka-3: localhost:39092
+#
+# Zookeper node is accessible from the host machine on:
+#   zk1: localhost:22181
+# 
+# Schema-Registry is accessibke from the host machine on:
+#   schema-registry: localhost:18081  
+
+version: '2'
+services:
+  zk1:
+    image: confluentinc/cp-zookeeper:4.1.0
+    ports:
+      - "22181:22181"
+      - "9999:9999"
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 22181
+      ZOOKEEPER_TICK_TIME: 2000
+      ZOOKEEPER_INIT_LIMIT: 5
+      ZOOKEEPER_SYNC_LIMIT: 2
+      ZOOKEEPER_SERVERS: zk1:22888:23888
+      KAFKA_JMX_HOSTNAME: ${HOST_IP}
+      KAFKA_JMX_PORT: 9999
+
+  kafka-1:
+    image: confluentinc/cp-kafka:4.1.0
+    ports:
+      - "19092:19092"
+      - "19999:19999"
+    depends_on:
+      - zk1
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: ${HOST_IP}:22181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${HOST_IP}:19092
+      KAFKA_JMX_HOSTNAME: ${HOST_IP}
+      KAFKA_JMX_PORT: 19999
+#      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE: "false"
+      KAFKA_NUM_PARTITIONS: 3
+
+  kafka-2:
+    image: confluentinc/cp-kafka:4.1.0
+    ports:
+      - "29092:29092"
+      - "29999:29999"
+    depends_on:
+      - zk1
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: ${HOST_IP}:22181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${HOST_IP}:29092
+      KAFKA_JMX_HOSTNAME: ${HOST_IP}
+      KAFKA_JMX_PORT: 29999
+#      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE: "false"
+      KAFKA_NUM_PARTITIONS: 3
+
+  kafka-3:
+    image: confluentinc/cp-kafka:4.1.0
+    ports:
+      - "39092:39092"
+      - "39999:39999"
+    depends_on:
+      - zk1
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: ${HOST_IP}:22181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://${HOST_IP}:39092
+      KAFKA_JMX_HOSTNAME: ${HOST_IP}
+      KAFKA_JMX_PORT: 39999
+#      KAFKA_AUTO_CREATE_TOPICS_ENABLE: "true"
+      KAFKA_UNCLEAN_LEADER_ELECTION_ENABLE: "false"
+      KAFKA_NUM_PARTITIONS: 3
+
+  schema-registry:
+    image: confluentinc/cp-schema-registry:4.1.0
+    ports:
+      - "18081:18081"
+    depends_on:
+      - zk1
+      - kafka-1
+      - kafka-2
+      - kafka-3
+    environment:
+      SCHEMA_REGISTRY_KAFKASTORE_CONNECTION_URL: ${HOST_IP}:22181
+      SCHEMA_REGISTRY_KAFKASTORE_SECURITY_PROTOCOL: PLAINTEXT
+      SCHEMA_REGISTRY_LISTENERS: http://0.0.0.0:18081 # It might work just setting the port as "listener"
+      SCHEMA_REGISTRY_HOST_NAME: schema-registry

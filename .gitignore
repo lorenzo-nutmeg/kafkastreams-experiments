@@ -233,3 +233,4 @@ $RECYCLE.BIN/
 
 # End of https://www.gitignore.io/api/osx,maven,linux,eclipse,windows,netbeans,intellij
 /.idea/
+*.iml
